@@ -12,11 +12,13 @@ public class ParallelProcessor {
     private String url;
     private ForkJoinPool forkJoinPool;
     private Map<String, BigInteger> linksVisited;
+    private final int MAX_RETRIES_DEFAULT = 32;
+
 
     public ParallelProcessor(String url) {
         this.url = url;
         linksVisited = Collections.synchronizedMap(new HashMap<String, BigInteger>());
-        forkJoinPool = ForkJoinPool.commonPool();
+        forkJoinPool = new ForkJoinPool(MAX_RETRIES_DEFAULT);
     }
 
     public Map<String, BigInteger> getLinksVisited() {

@@ -24,7 +24,7 @@ public class ParallelLinks extends RecursiveAction {
     public ParallelLinks(String url, ParallelProcessor parallelProcessor) {
         this.parallelProcessor = parallelProcessor;
         this.url = url;
-        LOGGER.setLevel(Level.SEVERE);
+        LOGGER.setLevel(Level.INFO);
     }
     @Override
     protected void compute() {

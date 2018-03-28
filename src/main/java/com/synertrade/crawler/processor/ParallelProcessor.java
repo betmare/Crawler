@@ -2,9 +2,6 @@ package com.synertrade.crawler.processor;
 
 import com.synertrade.crawler.sync.ParallelLinks;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;

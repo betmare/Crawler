@@ -12,11 +12,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ParallelLinks extends RecursiveAction {
 
     private String url;
     private ParallelProcessor parallelProcessor;
+    private final static Logger LOGGER = Logger.getLogger(ParallelLinks.class.getName());
 
     public ParallelLinks(String url, ParallelProcessor parallelProcessor) {
         this.parallelProcessor = parallelProcessor;
@@ -43,12 +46,12 @@ public class ParallelLinks extends RecursiveAction {
                         !parallelProcessor.getLinksVisited().containsKey(linkUrl)) {
                     parallelProcessor.getLinksVisited().put(linkUrl, BigInteger.ONE);
                     linksToProcess.add(new ParallelLinks(linkUrl, parallelProcessor));
-                    System.out.println("Crawling url: " + url + " visits " +
+                    LOGGER.info("Crawling url: " + linkUrl + " visits " +
                             parallelProcessor.getLinksVisited().get(linkUrl));
                 } else if (!linkUrl.isEmpty()) {
                     BigInteger value = parallelProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
                     parallelProcessor.getLinksVisited().put(linkUrl, value);
-                    System.out.println("Crawling url: " + url + " visits " +
+                    LOGGER.info("Crawling url: " + linkUrl + " visits " +
                             parallelProcessor.getLinksVisited().get(linkUrl));
 
                 }
@@ -63,7 +66,7 @@ public class ParallelLinks extends RecursiveAction {
             Parser parser = new Parser(linkUrl.openConnection());
             return parser.extractAllNodesThatMatch(new NodeClassFilter(LinkTag.class));
         } catch (Exception e) {
-            System.out.println("Error get Links");
+            LOGGER.log(Level.SEVERE,"Error get Links "+e.getMessage());
         }
         return null;
     }

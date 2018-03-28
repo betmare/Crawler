@@ -19,6 +19,7 @@ public class ParallelLinks extends RecursiveAction {
 
     private String url;
     private ParallelProcessor parallelProcessor;
+    private final int MAX_URLS = 5000;
     private final static Logger LOGGER = Logger.getLogger(ParallelLinks.class.getName());
 
     public ParallelLinks(String url, ParallelProcessor parallelProcessor) {
@@ -37,13 +38,14 @@ public class ParallelLinks extends RecursiveAction {
             for(int i = 0; i<linksList.size(); i++) {
                 LinkTag link = (LinkTag) linksList.elementAt(i);
                 String linkUrl = link.extractLink();
-                if (!linkUrl.isEmpty() &&
-                        !parallelProcessor.getLinksVisited().containsKey(linkUrl)) {
+                if (!linkUrl.isEmpty() && !parallelProcessor.getLinksVisited().containsKey(linkUrl)
+                        && parallelProcessor.getLinksVisited().size()<MAX_URLS) {
                     parallelProcessor.getLinksVisited().put(linkUrl, BigInteger.ONE);
                     linksToProcess.add(new ParallelLinks(linkUrl, parallelProcessor));
                     LOGGER.info("Crawling url: " + linkUrl + " visits " +
                             parallelProcessor.getLinksVisited().get(linkUrl));
-                } else if (!linkUrl.isEmpty()) {
+
+                } else if (!linkUrl.isEmpty() && parallelProcessor.getLinksVisited().get(linkUrl)!=null) {
                     BigInteger value = parallelProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
                     parallelProcessor.getLinksVisited().put(linkUrl, value);
                     LOGGER.info("Crawling url: " + linkUrl + " visits " +

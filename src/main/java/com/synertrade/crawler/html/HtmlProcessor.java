@@ -1,29 +1,41 @@
 package com.synertrade.crawler.html;
 
-import java.util.ArrayList;
+import com.synertrade.crawler.sync.ParallelLinks;
 
-import java.util.List;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ForkJoinPool;
 
-/**
- *
- * @author ernes
- */
 public class HtmlProcessor {
+    private String url;
+    private ForkJoinPool forkJoinPool;
+    private Map<String, Long> linksVisited;
 
-    public List<String> getAllLinks(String url) throws Exception {
-        Document htmlFile;
-        List<String> listLinks = new ArrayList<>();
-        htmlFile = Jsoup.connect(url).get();
-        Elements links = htmlFile.getElementsByTag("a");
-        for (Element link : links) {
-            if (link.attr("href").contains("/wiki")) {
-                listLinks.add("https://www.mediawiki.org"+link.attr("href"));
-            }
-        }
-        return listLinks;
+    public HtmlProcessor(String url) {
+        this.url = url;
+        linksVisited = Collections.synchronizedMap(new HashMap<String, Long>());
+        forkJoinPool = ForkJoinPool.commonPool();
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Map<String, Long> getLinksVisited() {
+        return linksVisited;
+    }
+
+    public void setLinksVisited(Map<String, Long> linksVisited) {
+        this.linksVisited = linksVisited;
+    }
+
+    public void start() {
+        forkJoinPool.invoke(new ParallelLinks(url,this));
+    }
+
 }

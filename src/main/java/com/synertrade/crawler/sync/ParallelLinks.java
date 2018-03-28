@@ -41,7 +41,7 @@ public class ParallelLinks extends RecursiveAction {
                 String linkUrl = link.extractLink();
                 if (!linkUrl.isEmpty() &&
                         !parallelProcessor.getLinksVisited().containsKey(linkUrl)) {
-                    parallelProcessor.getLinksVisited().put(url, BigInteger.ONE);
+                    parallelProcessor.getLinksVisited().put(linkUrl, BigInteger.ONE);
                     linksToProcess.add(new ParallelLinks(linkUrl, parallelProcessor));
                     System.out.println("Crawling url: " + url + " visits " +
                             parallelProcessor.getLinksVisited().get(linkUrl));

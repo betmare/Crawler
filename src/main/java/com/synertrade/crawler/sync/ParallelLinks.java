@@ -28,21 +28,34 @@ public class ParallelLinks extends RecursiveAction {
     }
     @Override
     protected void compute() {
-        invokeAll(createSubTasks());
+        if(!htmlProcessor.getLinksVisited().containsKey(url)) {
+            invokeAll(createSubTasks());
+        } else {
+            htmlProcessor.getLinksVisited().get(url).add(BigInteger.ONE);
+            System.out.println("Crawling url: "+url+" visits "+
+                    htmlProcessor.getLinksVisited().get(url));
+        }
     }
     private List<ParallelLinks> createSubTasks() {
         List<ParallelLinks> linksToProcess = new ArrayList<>();
         NodeList linksList = getLinks(url);
-        for(int i = 0; i<linksList.size(); i++) {
-            LinkTag link = (LinkTag) linksList.elementAt(i);
-            String linkUrl = link.extractLink();
-            if(!linkUrl.isEmpty() &&
-                    !htmlProcessor.getLinksVisited().containsKey(linkUrl)) {
-                linksToProcess.add(new ParallelLinks(linkUrl, htmlProcessor));
-            } else if(!linkUrl.isEmpty()){
-                htmlProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
-            }
+        if(linksList != null) {
+            for(int i = 0; i<linksList.size(); i++) {
+                LinkTag link = (LinkTag) linksList.elementAt(i);
+                String linkUrl = link.extractLink();
+                if (!linkUrl.isEmpty() &&
+                        !htmlProcessor.getLinksVisited().containsKey(linkUrl)) {
+                    htmlProcessor.getLinksVisited().put(url, BigInteger.ONE);
+                    linksToProcess.add(new ParallelLinks(linkUrl, htmlProcessor));
+                    System.out.println("Crawling url: " + url + " visits " +
+                            htmlProcessor.getLinksVisited().get(url));
+                } else if (!linkUrl.isEmpty()) {
+                    htmlProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
+                    System.out.println("Crawling url: " + url + " visits " +
+                            htmlProcessor.getLinksVisited().get(url));
 
+                }
+            }
         }
         return linksToProcess;
     }

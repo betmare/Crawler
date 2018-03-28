@@ -9,11 +9,11 @@ public class Main {
 
     public static void main(String args[]) {
 
-        System.out.println ("Please, introduce an url to crawler (Press enter for: https://en.wikipedia.org/wiki/Europe):");
+        System.out.println ("Please, introduce an url to crawl (Press enter for: "+URL+"):");
         Scanner scanner = new Scanner (System.in);
         String input = scanner.nextLine();
         if(!input.isEmpty()) {
-
+            new HtmlProcessor(input).start();
         } else {
             new HtmlProcessor(URL).start();
         }

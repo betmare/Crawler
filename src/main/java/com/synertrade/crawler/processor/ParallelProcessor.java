@@ -1,7 +1,10 @@
-package com.synertrade.crawler.html;
+package com.synertrade.crawler.processor;
 
 import com.synertrade.crawler.sync.ParallelLinks;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,8 +26,8 @@ public class ParallelProcessor {
         return linksVisited;
     }
 
-    public void start() {
+    public Map<String, BigInteger> start() {
         forkJoinPool.invoke(new ParallelLinks(url,this));
+        return this.getLinksVisited();
     }
-
 }

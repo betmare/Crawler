@@ -1,6 +1,6 @@
 package com.synertrade.crawler.sync;
 
-import com.synertrade.crawler.html.ParallelProcessor;
+import com.synertrade.crawler.processor.ParallelProcessor;
 
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
@@ -24,6 +24,7 @@ public class ParallelLinks extends RecursiveAction {
     public ParallelLinks(String url, ParallelProcessor parallelProcessor) {
         this.parallelProcessor = parallelProcessor;
         this.url = url;
+        LOGGER.setLevel(Level.INFO);
     }
     @Override
     protected void compute() {

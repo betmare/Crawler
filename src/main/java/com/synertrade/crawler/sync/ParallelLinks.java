@@ -1,39 +1,35 @@
 package com.synertrade.crawler.sync;
 
-import com.synertrade.crawler.html.HtmlProcessor;
+import com.synertrade.crawler.html.ParallelProcessor;
 
-import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveAction;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class ParallelLinks extends RecursiveAction {
 
     private String url;
-    private HtmlProcessor htmlProcessor;
+    private ParallelProcessor parallelProcessor;
 
-    public ParallelLinks(String url, HtmlProcessor htmlProcessor) {
-        this.htmlProcessor = htmlProcessor;
+    public ParallelLinks(String url, ParallelProcessor parallelProcessor) {
+        this.parallelProcessor = parallelProcessor;
         this.url = url;
     }
     @Override
     protected void compute() {
-        if(!htmlProcessor.getLinksVisited().containsKey(url)) {
+        if(!parallelProcessor.getLinksVisited().containsKey(url)) {
             invokeAll(createSubTasks());
         } else {
-            htmlProcessor.getLinksVisited().get(url).add(BigInteger.ONE);
+            parallelProcessor.getLinksVisited().get(url).add(BigInteger.ONE);
             System.out.println("Crawling url: "+url+" visits "+
-                    htmlProcessor.getLinksVisited().get(url));
+                    parallelProcessor.getLinksVisited().get(url));
         }
     }
     private List<ParallelLinks> createSubTasks() {
@@ -44,15 +40,16 @@ public class ParallelLinks extends RecursiveAction {
                 LinkTag link = (LinkTag) linksList.elementAt(i);
                 String linkUrl = link.extractLink();
                 if (!linkUrl.isEmpty() &&
-                        !htmlProcessor.getLinksVisited().containsKey(linkUrl)) {
-                    htmlProcessor.getLinksVisited().put(url, BigInteger.ONE);
-                    linksToProcess.add(new ParallelLinks(linkUrl, htmlProcessor));
+                        !parallelProcessor.getLinksVisited().containsKey(linkUrl)) {
+                    parallelProcessor.getLinksVisited().put(url, BigInteger.ONE);
+                    linksToProcess.add(new ParallelLinks(linkUrl, parallelProcessor));
                     System.out.println("Crawling url: " + url + " visits " +
-                            htmlProcessor.getLinksVisited().get(url));
+                            parallelProcessor.getLinksVisited().get(linkUrl));
                 } else if (!linkUrl.isEmpty()) {
-                    htmlProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
+                    BigInteger value = parallelProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
+                    parallelProcessor.getLinksVisited().put(linkUrl, value);
                     System.out.println("Crawling url: " + url + " visits " +
-                            htmlProcessor.getLinksVisited().get(url));
+                            parallelProcessor.getLinksVisited().get(linkUrl));
 
                 }
             }

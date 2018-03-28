@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-public class HtmlProcessor {
+public class ParallelProcessor {
     private String url;
     private ForkJoinPool forkJoinPool;
     private Map<String, BigInteger> linksVisited;
 
-    public HtmlProcessor(String url) {
+    public ParallelProcessor(String url) {
         this.url = url;
         linksVisited = Collections.synchronizedMap(new HashMap<String, BigInteger>());
         forkJoinPool = ForkJoinPool.commonPool();

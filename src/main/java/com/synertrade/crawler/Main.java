@@ -1,6 +1,6 @@
 package com.synertrade.crawler;
 
-import com.synertrade.crawler.html.HtmlProcessor;
+import com.synertrade.crawler.html.ParallelProcessor;
 
 import java.util.Scanner;
 
@@ -13,9 +13,9 @@ public class Main {
         Scanner scanner = new Scanner (System.in);
         String input = scanner.nextLine();
         if(!input.isEmpty()) {
-            new HtmlProcessor(input).start();
+            new ParallelProcessor(input).start();
         } else {
-            new HtmlProcessor(URL).start();
+            new ParallelProcessor(URL).start();
         }
     }
 }

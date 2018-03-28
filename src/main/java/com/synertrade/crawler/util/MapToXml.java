@@ -21,7 +21,9 @@ public class MapToXml {
             marshaller.marshal(counterVisits, System.out);
             marshaller.marshal(counterVisits, writer);
             String result = writer.toString();
-            new FileWriter("counter_visits.xml").write(result);
+            FileWriter fileWriter = new FileWriter("counter_visits.xml");
+            fileWriter.write(result);
+            fileWriter.close();
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (Exception e) {

@@ -28,6 +28,6 @@ public class ParallelProcessor {
 
     public Map<String, BigInteger> start() {
         forkJoinPool.invoke(new ParallelLinks(url,this));
-        return this.getLinksVisited();
+        return getLinksVisited();
     }
 }

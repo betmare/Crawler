@@ -7,17 +7,20 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement
 public class CounterVisits {
-    private Map<String, BigInteger> counterVisits = new HashMap<>();
+    @XmlElementWrapper
+    private Map<String, BigInteger> urls = new HashMap<>();
 
-    public CounterVisits(Map<String, BigInteger> counterVisits) {
-        this.counterVisits = counterVisits;
+    public CounterVisits(){}
+
+    public CounterVisits(Map<String, BigInteger> urls) {
+        this.urls = urls;
     }
 
     public Map<String, BigInteger> getCounterVisits() {
-        return counterVisits;
+        return urls;
     }
 
-    public void setCounterVisits(Map<String, BigInteger> counterVisits) {
-        this.counterVisits = counterVisits;
+    public void setUrls(Map<String, BigInteger> urls) {
+        this.urls = urls;
     }
 }

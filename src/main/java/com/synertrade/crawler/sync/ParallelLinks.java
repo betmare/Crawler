@@ -27,13 +27,7 @@ public class ParallelLinks extends RecursiveAction {
     }
     @Override
     protected void compute() {
-        if(!parallelProcessor.getLinksVisited().containsKey(url)) {
-            invokeAll(createSubTasks());
-        } else {
-            parallelProcessor.getLinksVisited().get(url).add(BigInteger.ONE);
-            System.out.println("Crawling url: "+url+" visits "+
-                    parallelProcessor.getLinksVisited().get(url));
-        }
+        invokeAll(createSubTasks());
     }
     private List<ParallelLinks> createSubTasks() {
         List<ParallelLinks> linksToProcess = new ArrayList<>();

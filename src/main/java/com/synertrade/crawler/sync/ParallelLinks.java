@@ -8,6 +8,7 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,11 +36,11 @@ public class ParallelLinks extends RecursiveAction {
         for(int i = 0; i<linksList.size(); i++) {
             LinkTag link = (LinkTag) linksList.elementAt(i);
             String linkUrl = link.extractLink();
-            if(!htmlProcessor.getLinksVisited().containsKey(linkUrl)) {
-
-            } else {
-                Long value = htmlProcessor.getLinksVisited().get(linkUrl);
-                htmlProcessor.getLinksVisited().put(linkUrl, value + 1);
+            if(!linkUrl.isEmpty() &&
+                    !htmlProcessor.getLinksVisited().containsKey(linkUrl)) {
+                linksToProcess.add(new ParallelLinks(linkUrl, htmlProcessor));
+            } else if(!linkUrl.isEmpty()){
+                htmlProcessor.getLinksVisited().get(linkUrl).add(BigInteger.ONE);
             }
 
         }
@@ -52,7 +53,7 @@ public class ParallelLinks extends RecursiveAction {
             Parser parser = new Parser(linkUrl.openConnection());
             return parser.extractAllNodesThatMatch(new NodeClassFilter(LinkTag.class));
         } catch (Exception e) {
-
+            System.out.println("Error get Links");
         }
         return null;
     }
